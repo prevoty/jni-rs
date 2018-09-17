@@ -1,0 +1,11 @@
+[package]
+name = "java-test"
+version = "0.1.0"
+authors = ["Dmitry Timofeev <dmittimofeev@ya.ru>"]
+description = "A library with implementations of native Java methods from java-tests"
+
+[dependencies]
+jni = { path = "../jni" }
+
+[lib]
+crate_type = ["cdylib"]
