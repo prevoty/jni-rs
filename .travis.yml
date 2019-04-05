@@ -1,25 +1,28 @@
 language: rust
 rust:
-    - stable
-    - beta
-    - nightly
+  - stable
+  - beta
+  - nightly
+
+env:
+  - JAVA_VERSION=openjdk11
 
 matrix:
+  include:
+    - name: "OracleJDK 8/stable Rust"
+      rust: stable
+      env: JAVA_VERSION=oraclejdk8
   allow_failures:
     - rust: nightly
 
-jdk:
-  - oraclejdk8
-
-env:
-  global:
-    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    - LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64/server
-
 before_script:
   - export RUST_BACKTRACE=1
-  - echo $JAVA_HOME
-  - echo $LD_LIBRARY_PATH
+  - export JAVA_HOME="${HOME}/${JAVA_VERSION}"
+  # fixme:
+  #- export PATH="${JAVA_HOME}/bin:$PATH"
+  - $TRAVIS_BUILD_DIR/install-jdk.sh --install ${JAVA_VERSION} --target ${JAVA_HOME}
+  # Setup the environment variables
+  - . build_profile
 
 script:
   - cargo build
