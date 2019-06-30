@@ -25,6 +25,8 @@ use descriptors::Desc;
 
 use signature::{JavaType, Primitive, TypeSignature};
 
+use class_loader;
+
 use JNIVersion;
 use JavaVM;
 
@@ -130,8 +132,7 @@ impl<'a> JNIEnv<'a> {
         S: Into<JNIString>,
     {
         let name = name.into();
-        let class = jni_non_null_call!(self.internal, FindClass, name.as_ptr());
-        Ok(class)
+        class_loader::load_class(&self, name)
     }
 
     /// Returns the superclass for a particular class OR `JObject::null()` for `java.lang.Object` or
