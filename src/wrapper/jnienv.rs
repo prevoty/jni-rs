@@ -118,6 +118,29 @@ impl<'a> JNIEnv<'a> {
         Ok(class)
     }
 
+    /// Define a new java class using an AutoByteArray
+    pub fn define_class_autobytearray<S>(
+        &self,
+        name: S,
+        loader: JObject<'a>,
+        buf: AutoByteArray,
+        buf_length: jsize,
+    ) -> Result<JClass<'a>>
+    where
+        S: Into<JNIString>,
+    {
+        let name = name.into();
+        let class = jni_non_null_call!(
+            self.internal,
+            DefineClass,
+            name.as_ptr(),
+            loader.into_inner(),
+            buf.as_ptr(),
+            buf_length
+        );
+        Ok(class)
+    }
+
     /// Look up a class by name.
     ///
     /// # Example
