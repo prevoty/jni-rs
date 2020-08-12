@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- `define_class_bytearr` method that takes an AutoByteArray (and `len` parameter as `jsize`) rather than a `&[u8]`
+
 ## [0.17.0] — 2020-06-30
 
 ### Added
