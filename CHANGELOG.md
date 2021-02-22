@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Relaxed lifetime restrictions on `JNIEnv::new_local_ref`. Now it can be used to create a local
+  reference from a global reference. (#301 / #319)
+
 ## [0.19.0] — 2021-01-24
 
 ### Added
