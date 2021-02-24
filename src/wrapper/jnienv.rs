@@ -14,7 +14,7 @@ use crate::{
     objects::{
         AutoArray, AutoLocal, AutoPrimitiveArray, GlobalRef, JByteBuffer, JClass, JFieldID, JList,
         JMap, JMethodID, JObject, JStaticFieldID, JStaticMethodID, JString, JThrowable, JValue,
-        ReleaseMode, TypeArray,
+        ReleaseMode, TypeArray, WeakRef,
     },
     signature::{JavaType, Primitive, TypeSignature},
     strings::{JNIString, JavaStr},
@@ -345,6 +345,25 @@ impl<'a> JNIEnv<'a> {
             jni_unchecked!(self.internal, NewGlobalRef, obj.into().into_inner()).into();
         let global = unsafe { GlobalRef::from_raw(self.get_java_vm()?, new_ref.into_inner()) };
         Ok(global)
+    }
+
+    /// Creates a new [weak global reference][WeakRef].
+    ///
+    /// If the provided object is null, this method returns `None`. Otherwise, it returns `Some`
+    /// containing the new weak global reference.
+    pub fn new_weak_ref<O>(&self, obj: O) -> Result<Option<WeakRef>>
+    where
+        O: Into<JObject<'a>>,
+    {
+        let new_ref: sys::jweak =
+            jni_non_void_call!(self.internal, NewWeakGlobalRef, obj.into().into_inner());
+
+        if new_ref.is_null() {
+            return Ok(None);
+        }
+
+        let weak = unsafe { WeakRef::from_raw(self.get_java_vm()?, new_ref) };
+        Ok(Some(weak))
     }
 
     /// Create a new local ref to an object.
