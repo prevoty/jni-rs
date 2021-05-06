@@ -14,7 +14,7 @@ use crate::{
     objects::{
         AutoArray, AutoLocal, AutoPrimitiveArray, GlobalRef, JByteBuffer, JClass, JFieldID, JList,
         JMap, JMethodID, JObject, JStaticFieldID, JStaticMethodID, JString, JThrowable, JValue,
-        ReleaseMode, TypeArray,
+        ReleaseMode, TypeArray, WeakRef,
     },
     signature::{JavaType, Primitive, TypeSignature},
     strings::{JNIString, JavaStr},
@@ -347,13 +347,36 @@ impl<'a> JNIEnv<'a> {
         Ok(global)
     }
 
+    /// Creates a new [weak global reference][WeakRef].
+    ///
+    /// If the provided object is null, this method returns `None`. Otherwise, it returns `Some`
+    /// containing the new weak global reference.
+    pub fn new_weak_ref<O>(&self, obj: O) -> Result<Option<WeakRef>>
+    where
+        O: Into<JObject<'a>>,
+    {
+        let new_ref: sys::jweak =
+            jni_non_void_call!(self.internal, NewWeakGlobalRef, obj.into().into_inner());
+
+        if new_ref.is_null() {
+            return Ok(None);
+        }
+
+        let weak = unsafe { WeakRef::from_raw(self.get_java_vm()?, new_ref) };
+        Ok(Some(weak))
+    }
+
     /// Create a new local ref to an object.
     ///
-    /// Note that the object passed to this is *already* a local ref. This
-    /// creates yet another reference to it, which is most likely not what you
-    /// want.
-    pub fn new_local_ref<T>(&self, obj: JObject<'a>) -> Result<JObject<'a>> {
-        let local: JObject = jni_unchecked!(self.internal, NewLocalRef, obj.into_inner()).into();
+    /// This is useful for creating a local reference from a [global reference][GlobalRef] or
+    /// creating a local reference in a different [local reference frame][JNIEnv::with_local_frame]
+    /// than the original.
+    pub fn new_local_ref<'b, O>(&self, obj: O) -> Result<JObject<'a>>
+    where
+        O: Into<JObject<'b>>,
+    {
+        let local: JObject =
+            jni_unchecked!(self.internal, NewLocalRef, obj.into().into_inner()).into();
         Ok(local)
     }
 
