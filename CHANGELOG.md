@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `TryFrom<JValue>` for types inside JValue variants (#264).
 - Implemented Copy for JNIEnv (#255).
 - `repr(transparent)` attribute to JavaVM struct (#259)
+- `Send` and `Sync` implementations for `JMethodID`, `JStaticMethodID`, `JFieldID` and
+  `JStaticFieldID`. (#274)
 
 ### Changed
 - Switch from `error-chain` to `thiserror`, making all errors `Send`. Also, support all JNI errors
