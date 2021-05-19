@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- The lifetime of `AutoArray` is no longer tied to the lifetime of a particular `JNIEnv` reference. (#302)
+
 ## [0.19.0] — 2021-01-24
 
 ### Added
