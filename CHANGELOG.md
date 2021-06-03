@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Breaking change: Mark `JNIEnv::new_direct_byte_buffer` as `unsafe` (#320) 
+
 ## [0.19.0] — 2021-01-24
 
 ### Added
