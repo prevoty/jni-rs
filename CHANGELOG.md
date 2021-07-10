@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- `Default` trait implemented for `JObject`, `JString`, `JClass`, and `JByteBuffer` (#199)
+
 ## [0.19.0] — 2021-01-24
 
 ### Added
